@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+        .button {
+            width: 100%;
+            background-color: #1d4ed8;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2563eb;
+        }
+        .download-link {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            color: #1d4ed8;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="container">
+        <h1 class="text-2xl font-bold text-center text-gray-700 mb-4">QR Code Generator</h1>
+        <input type="text" id="name" class="input-field" placeholder="Enter name">
+        <input type="text" id="phone" class="input-field" placeholder="Enter phone number">
+        <input type="email" id="email" class="input-field" placeholder="Enter email">
+        <button onclick="generateQRCode()" class="button">Generate QR Code</button>
+        <div id="qrcode" class="mt-4 flex justify-center"></div>
+        <a id="download" class="download-link">Download QR Code</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        function generateQRCode() {
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var email = document.getElementById("email").value;
+
+            // vCard format
+            var vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+
+            // Clear previous QR code
+            document.getElementById("qrcode").innerHTML = "";
+
+            // Generate new QR code
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: vCard,
+                width: 128,
+                height: 128
+            });
+
+            // Add a small delay to ensure the QR code is generated
+            setTimeout(() => {
+                // Get the QR code image
+                var qrImage = document.querySelector('#qrcode img').src;
+
+                // Set the download link
+                var downloadLink = document.getElementById("download");
+                downloadLink.href = qrImage;
+                downloadLink.download = "qrcode.png";
+                downloadLink.style.display = "block";
+                downloadLink.textContent = "Download QR Code";
+            }, 500); // Adjust the delay if necessary
+        }
+    </script>
+</body>
+</html>
